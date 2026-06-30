@@ -66,6 +66,7 @@ const getAll = async (req, res) => {
               COALESCE(u.email, '') as email,
               comp.name as admin_company_name,
               c.type,
+              (SELECT source FROM leads WHERE email = u.email AND company_id = c.company_id LIMIT 1) as source,
               (SELECT COUNT(*) FROM projects p WHERE p.client_id = c.id AND p.is_deleted = 0) as total_projects,
               (SELECT COALESCE(SUM(total), 0) FROM invoices i WHERE i.client_id = c.id AND i.is_deleted = 0) as total_invoiced,
               (SELECT COALESCE(SUM(p.amount), 0) 
